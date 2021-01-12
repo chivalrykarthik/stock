@@ -35,8 +35,10 @@ const fp = {
         return filterData;
     },
     filterBasedOnPrevPrice: (data) => {
-        const filterData = data.filter(dt => {
-            return ((dt.CLOSE > dt.PREVCLOSE) && (calcDiffPercentage(dt.CLOSE, dt.PREVCLOSE) >= CONSTANTS.VALID_CLOSE_PERCENT));
+        const filterData = data.filter((dt, key) => {
+            const incPercent = calcDiffPercentage(dt.CLOSE, dt.PREVCLOSE);
+            data[key].INCPERCENT = incPercent;
+            return ((dt.CLOSE > dt.PREVCLOSE) && (incPercent >= CONSTANTS.VALID_CLOSE_PERCENT));
         });
         log(`After last price filter:${filterData.length}`)
         return filterData;
