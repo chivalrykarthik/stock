@@ -1,7 +1,7 @@
 const csv = require('csvtojson')
 const { Parser } = require('json2csv');
 const fs = require('fs');
-const csvFilePath = './cm11JAN2021bhav.csv';
+const csvFilePath = './bhav.csv';
 const log = console.log;
 
 const CONSTANTS = {
@@ -37,10 +37,11 @@ const fp = {
     filterBasedOnPrevPrice: (data) => {
         const filterData = data.filter((dt, key) => {
             const incPercent = calcDiffPercentage(dt.CLOSE, dt.PREVCLOSE);
+            delete data[key].field14;
             data[key].INCPERCENT = incPercent;
             return ((dt.CLOSE > dt.PREVCLOSE) && (incPercent >= CONSTANTS.VALID_CLOSE_PERCENT));
         });
-        log(`After last price filter:${filterData.length}`)
+        log(`After prev price filter:${filterData.length}`)
         return filterData;
     },
     buildCsv: (data) => {
