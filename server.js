@@ -6,9 +6,11 @@ const log = console.log;
 
 const CONSTANTS = {
     VALID_TRADQTY: 1000,
+    VALID_TOTALTRADES: 9000,
     VALID_LOW_LAST_PRICE: 20,
     VALID_HIGH_LAST_PRICE: 1000,
-    VALID_CLOSE_PERCENT: 1
+    VALID_CLOSE_PERCENT: 1,
+    VALID_SERIES: ['EQ'],
 }
 const calcDiffPercentage = (close, prevClose) => {
     const res = (100 / prevClose) * (close - prevClose)
@@ -23,10 +25,21 @@ const fp = {
             console.log("Error in reading csv")
         }
     },
-    filterBasedOnTradeQty: (data) => {
+    filterBasedOnSeries: (data) => {
         log(`Actual result:${data.length}`)
+        // SERIES
+        const filterData = data.filter(dt => CONSTANTS.VALID_SERIES.includes(dt.SERIES))
+        log(`After series filter:${filterData.length}`)
+        return filterData;
+    },
+    filterBasedOnTradeQty: (data) => {
         const filterData = data.filter(dt => dt.TOTTRDQTY >= CONSTANTS.VALID_TRADQTY)
         log(`After trade qty filter:${filterData.length}`)
+        return filterData;
+    },
+    filterBasedOnTotalTrades: (data) => {
+        const filterData = data.filter(dt => dt.TOTALTRADES >= CONSTANTS.VALID_TOTALTRADES)
+        log(`After total trades filter:${filterData.length}`)
         return filterData;
     },
     filterBasedOnLastPrice: (data) => {
@@ -66,7 +79,9 @@ const fp = {
     }
 }
 fp.readFile()
+    .then(data => fp.filterBasedOnSeries(data))
     .then(data => fp.filterBasedOnTradeQty(data))
+    .then(data => fp.filterBasedOnTotalTrades(data))
     .then(data => fp.filterBasedOnLastPrice(data))
     .then(data => fp.filterBasedOnPrevPrice(data))
     .then(data => fp.buildCsv(data))
