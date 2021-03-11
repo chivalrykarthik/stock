@@ -1,0 +1,11 @@
+eq_band_changes_18012021
+voldatile report
+
+https://www1.nseindia.com/products/content/equities/equities/homepage_eq.htm
+
+
+HomeProductsEquitiesEquitiesHistorical DataSecurity-wise High/Low Value
+
+
+Security VaR-e	Index VaR-f	VaR Margin-g	Extreme Loss Rate-h	Adhoc Margin-I	Applicable Margin Rate-J
+23.98		0		23.98		3.5			0		27.48
