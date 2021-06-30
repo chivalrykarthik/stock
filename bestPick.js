@@ -7,6 +7,7 @@ const csvFilePath = './soft.csv';
 const output = './bestpick.csv';
 const log = console.log;
 
+//Test123
 const metrics = {
     "price": {
         validate: true,
