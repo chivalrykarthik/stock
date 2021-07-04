@@ -4,6 +4,7 @@ const { readFile, writeFile } = require('fs');
 const { promisify } = require('util');
 const readFilePr = promisify(readFile);
 const writePr = promisify(writeFile);
+const mapping = require('./colMapping');
 let contentLength = null;
 class StockProcess {
     getHtml = async () => {
@@ -59,14 +60,50 @@ class StockProcess {
             console.log("Error in writing:", e.message)
         }
     }
+
+    createJSON = async (content) => {
+        try {
+            const wr = await writePr('./analysis.json', content);
+            console.log("Completed");
+        } catch (e) {
+            console.log("Error in writing:", e.message)
+        }
+    }
+
+    buildJSON = (content) => {
+        if (content && content.length) {
+
+            const actHeadings = Object.keys(content[0]);
+            const finalObj = content.map(cont => {
+                let tmp = { filters: {} };
+                tmp[mapping['Name']] = cont['Name'];
+                actHeadings.forEach(heading => {
+
+                    if (mapping[heading]) {
+                        tmp[mapping[heading]] = cont[heading];
+                    }
+                    if (mapping.filters[heading]) {
+                        tmp.filters[mapping.filters[heading]] = cont[heading];
+                    }
+                    // return tmp;
+                })
+                return tmp;
+            });
+            const json = JSON.stringify(finalObj);
+            return json;
+        }
+
+    }
 }
 const processFunc = async () => {
     try {
         const obj = new StockProcess();
         const html = await obj.getHtml();
         const content = await obj.processHtml(html);
+        const json = obj.buildJSON(content);
         const csv = obj.buildCsv(content);
         obj.createCsv(csv);
+        obj.createJSON(json);
     } catch (e) {
         console.log("Err:", e.message)
     }
