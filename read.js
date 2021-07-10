@@ -22,7 +22,8 @@ class StockProcess {
             let content = [];
             const getHeading = (key, val) => {
                 const txt = $(val).text().trim();
-                if (!heading.includes(txt)) heading.push(txt);
+                const filteredTxt = txt.replace(/[^a-z0-9]/gmi, "");
+                if (!heading.includes(filteredTxt)) heading.push(filteredTxt);
             }
             const getContent = (key, val) => {
                 const headingLenght = heading.length;
