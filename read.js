@@ -79,12 +79,18 @@ class StockProcess {
                 let tmp = { filters: {} };
                 tmp[mapping['Name']] = cont['Name'];
                 actHeadings.forEach(heading => {
-
+                    /*
+                    TODO: stock name should be static
+                    */
                     if (mapping[heading]) {
                         tmp[mapping[heading]] = cont[heading];
+                    } else if (heading !== 'SNo' && heading !== 'Name') {
+                        tmp[heading] = cont[heading];
                     }
                     if (mapping.filters[heading]) {
                         tmp.filters[mapping.filters[heading]] = cont[heading];
+                    } else if (heading !== 'SNo' && heading !== 'Name') {
+                        tmp.filters[heading] = cont[heading];
                     }
                     // return tmp;
                 })
