@@ -6,10 +6,12 @@ const readFilePr = promisify(readFile);
 const writePr = promisify(writeFile);
 const mapping = require('./colMapping');
 let contentLength = null;
+const source = process.argv[2] || './test.html';
+const destination = process.argv[3] || './analysis';
 class StockProcess {
     getHtml = async () => {
         try {
-            const content = await readFilePr('./test.html', 'utf8');
+            const content = await readFilePr(source, 'utf8');
             return content;
         } catch (e) {
             console.log("Error in reading file", e.messaged)
@@ -55,7 +57,7 @@ class StockProcess {
     }
     createCsv = async (content) => {
         try {
-            const wr = await writePr('./analysis.csv', content);
+            const wr = await writePr(`${destination}.csv`, content);
             console.log("Completed");
         } catch (e) {
             console.log("Error in writing:", e.message)
@@ -64,7 +66,7 @@ class StockProcess {
 
     createJSON = async (content) => {
         try {
-            const wr = await writePr('./analysis.json', content);
+            const wr = await writePr(`${destination}.json`, content);
             console.log("Completed");
         } catch (e) {
             console.log("Error in writing:", e.message)
@@ -109,7 +111,7 @@ const processFunc = async () => {
         const content = await obj.processHtml(html);
         const json = obj.buildJSON(content);
         const csv = obj.buildCsv(content);
-        obj.createCsv(csv);
+        // obj.createCsv(csv);
         obj.createJSON(json);
     } catch (e) {
         console.log("Err:", e.message)

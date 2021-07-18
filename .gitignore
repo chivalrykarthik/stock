@@ -2,4 +2,7 @@ node_modules
 1.json
 2.json
 analysis.csv
+analysis.json
 final.json
+.env
+./pages/*

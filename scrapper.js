@@ -2,44 +2,88 @@ const puppeteer = require('puppeteer-core');
 const { writeFile } = require('fs');
 const { promisify } = require('util');
 const writePr = promisify(writeFile);
+require('dotenv').config()
+
+const userName = process.env.USER_NAME;
+const password = process.env.PASSWORD;
+const brw = process.env.BRW;
+const login = process.env.LOGIN;
+const nav = process.env.NAV;
+const output = process.env.OUTPUT;
 
 
-const navUrl = 'https://www.screener.in/company/compare/00000006/';
+const removeSelectors = ['Price to Earning', 'Dividend yield', 'Net Profit latest quarter', 'YOY Quarterly sales growth', 'YOY Quarterly profit growth', 'Sales latest quarter', 'Return on capital employed'];
+const cols = [
+    ['Price to Earning', 'PEG Ratio', 'Price to Sales', 'EVEBITDA', 'Interest Coverage Ratio', 'Debt to equity', 'Current ratio', 'Return on equity', 'Average return on equity 3Years', 'Average return on equity 5Years', 'Return on capital employed', 'Average return on capital employed 3Years', 'Average return on capital employed 5Years', 'Sales growth'],
+    ['Sales growth 3Years', 'Sales growth 5Years', 'EPS', 'EPS last year', 'EPS preceding year', 'EPS latest quarter', 'EPS preceding year quarter', 'Dividend yield', 'Dividend Payout Ratio', 'Return on assets', 'Return on assets preceding year', 'Return on assets 3years', 'Return on assets 5years'],
+    ['Altman Z Score', 'G Factor']
+]
 
-const sel = ['Price to Earning', 'PEG Ratio', 'EVEBITDA', 'Interest Coverage Ratio', 'Debt to equity', 'Current ratio', 'Market Capitalization', 'Return on equity', 'Average return on equity 3Years', 'Average return on equity 5Years', 'Return on capital employed', 'Average return on capital employed 3Years', 'Average return on capital employed 5Years', 'Sales growth', 'Sales growth 3Years'];
-
-const selectors = async (page, selector, indx) => {
+const selectors = async (page, selector, isCheked, indx = 0) => {
     const searchTxt = selector[indx];
     let searchInput = await page.$('#manage-search');
-    //await searchInput.click();
+
     await searchInput.type(searchTxt);
     const checkbox = await page.$(`input[value='${searchTxt}']`);
     const isCheckBoxChecked = await (await checkbox.getProperty("checked")).jsonValue();
-    if (!isCheckBoxChecked) {
-        await page.click(`input[value='${searchTxt}']`);
+    if (isCheked) {
+        if (!isCheckBoxChecked) {
+            await page.click(`input[value='${searchTxt}']`);
+        }
+    } else {
+        if (isCheckBoxChecked) {
+            await page.click(`input[value='${searchTxt}']`);
+        }
     }
-    console.log("isCheckoed====" + isCheckBoxChecked);
+
     if (indx < selector.length - 1) {
-        //await page.click('#manage-search');
-        //for (let i = 0; i <= searchTxt.length; i++) {
-        //  await page.keyboard.press('Backspace');
-        //}
         await searchInput.click({ clickCount: 3 });
         await searchInput.press('Backspace');
-        await selectors(page, selector, indx + 1);
+        await selectors(page, selector, isCheked, indx + 1);
+    } else {
+        await searchInput.click({ clickCount: 3 });
+        await searchInput.press('Backspace');
+    }
+};
+
+const processCols = async (page, cols, i = 0) => {
+    // Edit column
+    await page.click("a.button-secondary");
+    await page.waitForSelector("#manage-search");
+
+    // Remove previous selectors
+    await page.click("#manage-reset");
+    await selectors(page, removeSelectors, false);
+
+    // Add selectors
+    await selectors(page, cols[i], true);
+
+    // Final submit
+    await page.click("button.button-primary");
+
+    // Get table content        
+    await page.waitForSelector("table");
+    let inner_html = await page.$eval('table', element => element.innerHTML);
+
+    // Writing to file
+    inner_html = formContent(inner_html);
+    await writePr(`${output}${i}.html`, inner_html);
+    if (i < cols.length - 1) {
+        await processCols(page, cols, i + 1);
     }
 }
+
+const formContent = html => `<table>${html}</table>`;
 (async () => {
     try {
-
         const config = {
             headless: false,
-            executablePath: 'C:/Users/Karthik/AppData/Local/Google/Chrome/Application/chrome.exe',
+            executablePath: brw,
             slowMo: 50
         }
         const browser = await puppeteer.launch(config);
         const page = await browser.newPage();
-        await page.goto('https://www.screener.in/login/');
+        await page.goto(login);
 
         // Login
         await page.waitForSelector(".card");
@@ -50,28 +94,11 @@ const selectors = async (page, selector, indx) => {
         await page.click("button.button-primary");
         await page.waitForSelector("#sidebar");
 
-
         // GOTO page
-        await page.goto(navUrl);
+        await page.goto(nav);
         await page.waitForSelector("table");
 
-        // Edit column
-        await page.click("a.button-secondary");
-        await page.waitForSelector("#manage-search");
-
-        // selectors 
-        await selectors(page, sel, 0);
-
-        // Final submit
-        await page.click("button.button-primary");
-
-        // Get table content        
-        await page.waitForSelector("table");
-        let inner_html = await page.$eval('table', element => element.innerHTML);
-
-        // Writing to file
-        inner_html = `<table>${inner_html}</table>`
-        await writePr('./scrap.html', inner_html);
+        await processCols(page, cols, 0);
 
         await browser.close();
     } catch (e) {

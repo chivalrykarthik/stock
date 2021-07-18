@@ -1,8 +1,8 @@
 const fs = require('fs');
-const a = require('./1.json');
-const b = require('./2.json');
-
-
+const aName = process.argv[2] || './1.json';
+const bName = process.argv[3] || './2.json';
+const a = require(aName);
+const b = require(bName);
 
 const newAr = a.map((v, key) => {
     let f = v.filters;
