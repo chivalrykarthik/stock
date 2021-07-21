@@ -3,7 +3,7 @@ const { writeFile } = require('fs');
 const { promisify } = require('util');
 const writePr = promisify(writeFile);
 require('dotenv').config()
-
+const { log } = console;
 const userName = process.env.USER_NAME;
 const password = process.env.PASSWORD;
 const brw = process.env.BRW;
@@ -46,30 +46,48 @@ const selectors = async (page, selector, isCheked, indx = 0) => {
     }
 };
 
-const processCols = async (page, cols, i = 0) => {
+const openColumnFilter = async (page) => {
     // Edit column
+    log(`Opening edit column page`);
     await page.click("a.button-secondary");
     await page.waitForSelector("#manage-search");
 
     // Remove previous selectors
+    log(`Resetting the filters`);
     await page.click("#manage-reset");
     await selectors(page, removeSelectors, false);
+};
 
-    // Add selectors
+const processCols = async (page, cols, i = 0) => {
+    log(`------------Iteration started------------`);
+    // Open columns options
+    await openColumnFilter(page);
+
+    // Add Columns
+    log(`Selecting the columns`);
     await selectors(page, cols[i], true);
 
-    // Final submit
+    // Final submit    
     await page.click("button.button-primary");
 
     // Get table content        
+    log(`Getting content from the table`);
     await page.waitForSelector("table");
     let inner_html = await page.$eval('table', element => element.innerHTML);
 
     // Writing to file
+    log(`Writting data to file`);
     inner_html = formContent(inner_html);
     await writePr(`${output}${i}.html`, inner_html);
     if (i < cols.length - 1) {
         await processCols(page, cols, i + 1);
+    } else {
+        log(`------------Initiated finishing process------------`);
+        log(`Setting up columns before closing`);
+        // Open columns options
+        await openColumnFilter(page);
+        // Set columns before close        
+        await selectors(page, cols[0], true);
     }
 }
 
@@ -79,13 +97,17 @@ const formContent = html => `<table>${html}</table>`;
         const config = {
             headless: false,
             executablePath: brw,
-            slowMo: 50
+            slowMo: 25
         }
+        log(`Setting launch config`);
         const browser = await puppeteer.launch(config);
+        log(`Opening new page in browser`);
         const page = await browser.newPage();
+        log(`Opening login page`);
         await page.goto(login);
 
         // Login
+        log(`Login with user name and password`);
         await page.waitForSelector(".card");
         await page.click("#id_username");
         await page.type("#id_username", userName);
@@ -99,7 +121,7 @@ const formContent = html => `<table>${html}</table>`;
         await page.waitForSelector("table");
 
         await processCols(page, cols, 0);
-
+        log(`Closing the browser`);
         await browser.close();
     } catch (e) {
         console.log(e)

@@ -5,4 +5,5 @@ analysis.csv
 analysis.json
 final.json
 .env
-./pages/*
+pages
+
