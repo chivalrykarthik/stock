@@ -88,6 +88,9 @@ const processCols = async (page, cols, i = 0) => {
         await openColumnFilter(page);
         // Set columns before close        
         await selectors(page, cols[0], true);
+
+        // Final submit    
+        await page.click("button.button-primary");
     }
 }
 
