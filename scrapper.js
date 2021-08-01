@@ -101,7 +101,7 @@ const formContent = html => `<table>${html}</table>`;
         const config = {
             headless: false,
             executablePath: brw,
-            slowMo: 25
+            slowMo: 5
         }
         log(`Setting launch config`);
         const browser = await puppeteer.launch(config);
