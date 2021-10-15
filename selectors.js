@@ -6,8 +6,10 @@ const cols = [
 
 
 
-    ['Average return on capital employed 5Years', 'Sales growth', 'YOY Quarterly sales growth', 'Sales growth 3Years', 'Sales growth 5Years', 'EPS', 'EPS last year', 'EPS preceding year', 'EPS latest quarter', 'EPS preceding year quarter', 'Dividend yield', 'Dividend Payout Ratio'],
-    ['Return on assets', 'Return on assets preceding year', 'Return on assets 3years', 'Return on assets 5years', 'Altman Z Score', 'G Factor']
+    ['Average return on capital employed 5Years', 'Sales growth', 'YOY Quarterly sales growth', 'Sales growth 3Years', 'Sales growth 5Years', 'EPS', 'EPS last year', 'EPS preceding year', 'EPS latest quarter', 'EPS preceding quarter', 'EPS preceding year quarter', 'Dividend yield', 'Dividend Payout Ratio'],
+    ['Return on assets', 'Return on assets preceding year', 'Return on assets 3years', 'Return on assets 5years', 'Altman Z Score', 'G Factor'],
+    ['OPM', 'OPM last year', 'OPM preceding year', 'OPM latest quarter', 'OPM preceding quarter', 'OPM preceding year quarter'],
+    ['NPM last year', 'NPM preceding year', 'NPM latest quarter', 'NPM preceding quarter', 'NPM preceding year quarter']
 ]
 
 
