@@ -9,8 +9,9 @@ const cols = [
 
     ['Average return on capital employed 5Years', 'Sales growth', 'YOY Quarterly sales growth', 'Sales growth 3Years', 'Sales growth 5Years', 'EPS', 'EPS last year', 'EPS preceding year', 'EPS latest quarter', 'EPS preceding quarter', 'EPS preceding year quarter', 'Dividend yield', 'Dividend Payout Ratio'],
     ['Return on assets', 'Return on assets preceding year', 'Return on assets 3years', 'Return on assets 5years', 'Altman Z Score', 'G Factor'],
-    ['OPM', 'OPM last year', 'OPM preceding year', 'OPM latest quarter', 'OPM preceding quarter', 'OPM preceding year quarter'],
-    ['NPM last year', 'NPM preceding year', 'NPM latest quarter', 'NPM preceding quarter', 'NPM preceding year quarter']
+    ['OPM', 'OPM last year', 'OPM preceding year', 'OPM latest quarter', 'OPM preceding quarter', 'OPM preceding year quarter', 'Inventory turnover ratio'],
+    ['NPM last year', 'NPM preceding year', 'NPM latest quarter', 'NPM preceding quarter', 'NPM preceding year quarter', 'Return over 3months', 'Volume 1month average'],
+    ['Return over 1year', 'Volume 1year average']
 ]
 /*const cols = [
     ['Price to Earning', 'Earnings yield', 'Price to Sales', 'EVEBITDA', 'Interest Coverage Ratio', 'Debt to equity', 'Current ratio', 'QoQ Profits', 'QoQ Sales', 'YOY Quarterly profit growth', 'Return on equity', 'Return on equity preceding year', 'Average return on equity 3Years', 'Average return on equity 5Years', 'Return on capital employed'],
