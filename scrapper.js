@@ -60,8 +60,10 @@ const processCols = async (page, cols, i = 0) => {
 
     // Add Columns
     log(`Selecting the columns`);
-    await selectors(page, cols[i], true);
-
+    const n = 12;
+    const newCols = cols.slice(i, n + i);
+    await selectors(page, newCols, true);
+    log(`Selected ${newCols.length} columns`);
     // Final submit    
     await page.click("button.button-primary");
 
@@ -74,15 +76,17 @@ const processCols = async (page, cols, i = 0) => {
     log(`Writting data to file`);
     inner_html = formContent(inner_html);
     await writePr(`${output}${i}.html`, inner_html);
-    if (i < cols.length - 1) {
-        await processCols(page, cols, i + 1);
+    if (i + n < cols.length) {
+        await processCols(page, cols, i + n);
     } else {
+        log(`Processed ${i + n} selectors`);
         log(`------------Initiated finishing process------------`);
         log(`Setting up columns before closing`);
         // Open columns options
         await openColumnFilter(page);
         // Set columns before close        
-        await selectors(page, cols[0], true);
+        const newCols = cols.slice(0, n);
+        await selectors(page, newCols, true);
 
         // Final submit    
         await page.click("button.button-primary");
