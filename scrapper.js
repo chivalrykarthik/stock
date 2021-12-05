@@ -75,11 +75,11 @@ const processCols = async (page, cols, i = 0) => {
     // Writing to file
     log(`Writting data to file`);
     inner_html = formContent(inner_html);
+    log(`Processed ${i + newCols.length} selectors`);
     await writePr(`${output}${i}.html`, inner_html);
     if (i + n < cols.length) {
         await processCols(page, cols, i + n);
     } else {
-        log(`Processed ${i + n} selectors`);
         log(`------------Initiated finishing process------------`);
         log(`Setting up columns before closing`);
         // Open columns options

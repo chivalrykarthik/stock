@@ -9,3 +9,12 @@ HomeProductsEquitiesEquitiesHistorical DataSecurity-wise High/Low Value
 
 Security VaR-e	Index VaR-f	VaR Margin-g	Extreme Loss Rate-h	Adhoc Margin-I	Applicable Margin Rate-J
 23.98		0		23.98		3.5			0		27.48
+
+EarningsYield,ROCE,QtrSalesVar,QoQProfits,QoQSales,QtrProfitVar,NPMAnn,NPMPrevAnn,NPMQtr,NPMPrevQtr,NPMPYQtr,EVEBITA#,PERatio#,Debt to Eq#
+
+
+All:
+MarkCap,mc50,mc200,mc1,3mthreturn,6mthreturn,1Yrreturn,PERatio#,EarningsYield,EVEBITA#,Int Coverage,Debt to Eq#,CurrentRatio,FreeCashFlowRsCr,FCFPrevAnnRsCr,FreeCashFlow3YrsRsCr,QoQProfits,QoQSales,QtrProfitVar,ROE,ROEPrevAnn,ROCE,ROCEPrevYr,Salesgrowth,QtrSalesVar,SalesVar3Yrs,SalesVar5Yrs,EPS12M,EPSAnnRs,EPSPrevAnnRs,EPSQtrRs,EPSPrevQtrRs,EPSPYQtrRs,DivYld,DivPayout#,OPM,OPMAnn,OPMPrevAnn,OPMQtr,OPMPrevQtr,OPMPYQtr,InventTurnOver
+
+without MC:
+PERatio#,EarningsYield,EVEBITA#,Int Coverage,Debt to Eq#,CurrentRatio,FreeCashFlowRsCr,FCFPrevAnnRsCr,FreeCashFlow3YrsRsCr,QoQProfits,QoQSales,QtrProfitVar,ROE,ROEPrevAnn,ROCE,ROCEPrevYr,Salesgrowth,QtrSalesVar,SalesVar3Yrs,SalesVar5Yrs,EPS12M,EPSAnnRs,EPSPrevAnnRs,EPSQtrRs,EPSPrevQtrRs,EPSPYQtrRs,DivYld,DivPayout#,OPM,OPMAnn,OPMPrevAnn,OPMQtr,OPMPrevQtr,OPMPYQtr,InventTurnOver

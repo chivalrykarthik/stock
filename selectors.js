@@ -9,6 +9,13 @@ const removeSelectors = [
 ];
 
 const cols = [
+    'mc50', 'mcpd50', 'mc200', 'mc1',
+    'Return over 1day',
+    'Return over 1week',
+    'Return over 1month',
+    'Return over 3months',
+    'Return over 6months',
+    'Return over 1year',
     'Market Capitalization 3years back',
     'Market Capitalization 5years back',
     'Price to Earning',
@@ -52,8 +59,6 @@ const cols = [
     'Return on assets preceding year',
     'Return on assets 3years',
     'Return on assets 5years',
-    'Altman Z Score',
-    'G Factor',
     'OPM',
     'OPM last year',
     'OPM preceding year',
