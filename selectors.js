@@ -9,15 +9,15 @@ const removeSelectors = [
 ];
 
 const cols = [
-    'mc50', 'mcpd50', 'mc200', 'mc1',
+    'Market Capitalization 3years back',
+    'Market Capitalization 5years back',
+    'mc50', 'mcpd50', 'mc200', 'mc200Diff', 'mc1',
     'Return over 1day',
     'Return over 1week',
     'Return over 1month',
     'Return over 3months',
     'Return over 6months',
     'Return over 1year',
-    'Market Capitalization 3years back',
-    'Market Capitalization 5years back',
     'Price to Earning',
     'PER',
     'Earnings yield',
