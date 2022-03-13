@@ -20,6 +20,7 @@ const cols = [
     'Return over 1year',
     'Price to Earning',
     'PER',
+    'GN',
     'Earnings yield',
     'Price to Sales',
     'Price to Free Cash Flow',
