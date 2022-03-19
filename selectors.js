@@ -11,7 +11,7 @@ const removeSelectors = [
 const cols = [
     'Market Capitalization 3years back',
     'Market Capitalization 5years back',
-    'mc50', 'mcpd50', 'mc200', 'mc200Diff', 'mc1',
+    'mc50', 'mc200', 'mc200Diff', 'mc1',
     'Price to Earning',
     'PER',
     'GN',
@@ -67,9 +67,7 @@ const cols = [
     'NPM preceding quarter',
     'NPM preceding year quarter',
     'Return over 3months',
-    'Volume 1month average',
-    'Return over 1year',
-    'Volume 1year average'
+    'Return over 1year'
 ];
 
 module.exports = {
