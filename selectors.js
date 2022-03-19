@@ -65,9 +65,7 @@ const cols = [
     'NPM preceding year',
     'NPM latest quarter',
     'NPM preceding quarter',
-    'NPM preceding year quarter',
-    'Return over 3months',
-    'Return over 1year'
+    'NPM preceding year quarter'
 ];
 
 module.exports = {
