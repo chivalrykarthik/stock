@@ -31,7 +31,18 @@ class StockProcess {
                 const headingLenght = heading.length;
                 const index = key % headingLenght;
                 const headingTxt = heading[index];
-                const valTxt = $(val).text().trim();
+                let valTxt = $(val).text().trim();
+                if (headingTxt === 'Name') {
+                    let symb = '';
+                    const contentPath = $(val).find('a').attr('href');
+
+                    if (contentPath) {
+                        const pathSplit = contentPath.split('/').filter(v => v);
+                        symb = pathSplit[pathSplit.length - 1] === 'consolidated' ? pathSplit[pathSplit.length - 2] : pathSplit[pathSplit.length - 1];
+                    }
+                    valTxt = symb ? `${valTxt}~${symb}` : valTxt;
+                }
+
                 if (index === 0) {
                     contentLength = contentLength !== null ? contentLength + 1 : 0;
                 }
@@ -43,6 +54,17 @@ class StockProcess {
         } catch (e) {
             console.log("Invalid error:", e.message);
         }
+    }
+
+    addSymbol = async (content) => {
+        let newContent = JSON.parse(JSON.stringify(content));
+        for (let i = 0; i <= newContent.length - 1; i++) {
+            const tmp = newContent[i].Name.split('~');
+            newContent[i].Name = tmp.length ? tmp[0] : newContent[i].Name;
+            newContent[i].Symbol = tmp.length ? tmp[1] : '';
+        }
+        return newContent;
+
     }
     buildCsv = (data) => {
         try {
@@ -109,8 +131,9 @@ const processFunc = async () => {
         const obj = new StockProcess();
         const html = await obj.getHtml();
         const content = await obj.processHtml(html);
-        const json = obj.buildJSON(content);
-        const csv = obj.buildCsv(content);
+        const contentWithSymb = await obj.addSymbol(content);
+        const json = obj.buildJSON(contentWithSymb);
+        const csv = obj.buildCsv(contentWithSymb);
         // obj.createCsv(csv);
         obj.createJSON(json);
     } catch (e) {
