@@ -8,11 +8,14 @@ const userName = process.env.USER_NAME;
 const password = process.env.PASSWORD;
 const brw = process.env.BRW;
 const login = process.env.LOGIN;
-const nav = process.env.NAV;
+let nav = process.env.NAV;
 const output = process.env.OUTPUT;
 const { cols, removeSelectors } = require('./selectors');
 
-
+if (process.argv.slice(2)) {
+    const urlStr = process.argv.slice(2).toString().replace(/\*/gi, '&');
+    nav = urlStr;
+}
 
 const selectors = async (page, selector, isCheked, indx = 0) => {
     const searchTxt = selector[indx];
