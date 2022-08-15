@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Form Filler",
+    "description": "Populate fields",
+    "homepage_url": "http://www.google.com",
+    "version": "0.1",    
+    "action": {
+    "default_title": "Form Filler",
+      "default_popup": "index.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+       
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": ["action.js","constants.js"]
+        }
+    ],
+    "permissions": ["storage","scripting","tabs","downloads"],
+    "host_permissions": [
+       
+        "http://*/*",
+        "https://*/*"
+    ]
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+<head>
+    <style>
+        html,
+        body {
+            height: 200px;
+            width: 400px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 2px;
+
+        }
+
+        .item label {
+            width: 100px;
+
+        }
+
+        .btn {
+            padding: 10px 0 0 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item"><label>Counter:</label> <input id="counter" type="text" name="value"></div>
+        <div class="item"><label>Symbol:</label> <input id="extSymbol" type="text" name="value"></div>
+        <div class="item"><label>StartDate:</label> <input id="startDate" type="text" name="value"></div>
+        <div class="item"><label>EndDate:</label> <input id="endDate" type="text" name="value"></div>
+        <div class="item"><label>Year:</label> <input id="year" type="text" name="value"></div>
+        <div class="btn">
+            <button id='defaultValues'>Show Values</button>
+            <button id='counterInc'>Counter Inc</button>
+            <button id='yearInc'>Year Inc</button>
+            <button id='download'>Download</button>
+        </div>
+    </div>
+    <script src='constants.js'></script>
+    <script src='action.js'></script>
+</body>
+
+</html>

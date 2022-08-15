@@ -1,38 +1,52 @@
 const { exec } = require('child_process');
 const { promisify } = require('util');
-const url = require('url');
+const { unlink } = require('fs');
 const combine = require('./combine');
 require('dotenv').config()
 const execPr = promisify(exec);
-const urls = [
-    'https://www.screener.in/screen/raw/?sort=market+capitalization&order=&source=&query=Market+Capitalization+%3E+0&page=1',
-    'https://www.screener.in/screen/raw/?sort=market+capitalization&order=&source=&query=Market+Capitalization+%3E+0&page=2',
-    'https://www.screener.in/screen/raw/?sort=market+capitalization&order=&source=&query=Market+Capitalization+%3E+0&page=3'
-];
+const unlinkPr = promisify(unlink);
+const urls = [];
 const { log } = console;
+
+const callScrapper = async (tmpUlr) => {
+    log('*'.repeat(100))
+    log(`Extract URL:${tmpUlr}`)
+    log('*'.repeat(100))
+    log("Extracting data");
+    await execPr(`node ./scrapper.js ${tmpUlr}`);
+    log("Extracting completed:");
+}
+const callProcessPages = async () => {
+    log(`Processing HTML to JSON`)
+    await execPr(`node ./processPages.js`);
+    log(`Processed HTML to JSON`)
+}
+const callCombine = async () => {
+    log(`Finding JSON files from ./pages`);
+    await combine();
+    log(`Created master JSON FILE`);
+}
+const cleanBulk = async () => {
+    try {
+        await unlinkPr('./bulk/final.json');
+        log('Bulk is empty');
+    } catch (e) {
+        log('Bulk is already empty');
+    }
+}
 const process = async () => {
     try {
-        //Clean up
+        //Clean up bulk folder
         log("Cleaning up existing pages")
-        await execPr('node ./cleanUp.js')
+        await cleanBulk();
+
 
         for (let i = 0; i < urls.length; i++) {
             const tmpUlr = urls[i].replace(/&/gi, '*');
-
-            log('*'.repeat(100))
-            log(`Extract URL:${tmpUlr}`)
-            log('*'.repeat(100))
-            log("Extracting data");
-            await execPr(`node ./scrapper.js ${tmpUlr}`);
-            log("Extracting completed:");
-
-            log(`Processing HTML to JSON`)
-            await execPr(`node ./processPages.js`);
-            log(`Processed HTML to JSON`)
-
-            log(`Finding JSON files from ./pages`);
-            combine();
-            log(`Created master JSON FILE`);
+            await execPr('node ./cleanUp.js');
+            await callScrapper(tmpUlr);
+            await callProcessPages();
+            await callCombine();
 
             log(`Iteration ${i + 1} of ${urls.length} completed`)
         }
