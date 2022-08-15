@@ -14,7 +14,6 @@ const getFields = () => {
 }
 const setValues = (val) => {
 
-    const t = val[0];
     const {
         extSymbol,
         startDate,
@@ -34,6 +33,7 @@ const startDownload = () => {
 }
 const triggerDownload = async () => {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: startDownload,
@@ -57,6 +57,8 @@ const setData = async () => {
         target: { tabId: tab.id },
         function: setValues,
         args: [val]
+    }, function (res) {
+        // alert(JSON.stringify(res))
     });
     chrome.storage.local.set({ symb: extSymbol.value }, function () {
         console.log('Value is set to ' + extSymbol.value);
@@ -64,6 +66,78 @@ const setData = async () => {
 
 }
 
+const checkDownloadLink = () => {
+    const records = document.querySelectorAll('.alt');
+    if (records.length === 0) {
+        return 'pending';
+    } else if (records.length > 1) {
+        return 'done';
+    } else if (records.length === 1) {
+        return 'noRecords';
+    }
+
+}
+const checkDownloadExist = async (cb) => {
+    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        function: checkDownloadLink,
+    }, function (res) {
+        //alert(JSON.stringify(res))
+        //alert(pending)
+        if (res[0].result === pending) {
+            setTimeout(() => {
+                checkDownloadExist(cb)
+            }, 2000)
+        } else {
+            document.querySelector('#status').innerHTML = res[0].result;
+            cb(res[0].result)
+        }
+
+    });
+}
+
+const downloadYearRec = async () => {
+    const {
+        year,
+    } = getFields();
+    if (year.value < yearEnd) {
+        year.value = parseInt(year.value) + 1;
+        setData()
+        checkDownloadExist((res) => {
+            if (res === done) {
+                triggerDownload();
+                setTimeout(() => {
+                    downloadYearRec();
+                }, 2000);
+            } else {
+                downloadYearRec();
+            }
+        })
+    }
+}
+
+const downloadSymbolRec = () => {
+    const {
+        counter,
+        extSymbol
+    } = getFields();
+    if (counter.value < cmp.length - 1) {
+        counter.value = parseInt(counter.value) + 1;
+        extSymbol.value = cmp[counter.value];
+        setData()
+        checkDownloadExist((res) => {
+            if (res === done) {
+                triggerDownload();
+                setTimeout(() => {
+                    downloadSymbolRec();
+                }, 2000);
+            } else {
+                downloadSymbolRec();
+            }
+        })
+    }
+}
 document.querySelector('#defaultValues').addEventListener('click', async () => {
     const {
         counter,
@@ -84,9 +158,11 @@ document.querySelector('#counterInc').addEventListener('click', async () => {
     const {
         counter,
         extSymbol,
+        year
     } = getFields();
     counter.value = parseInt(counter.value) + 1;
     extSymbol.value = cmp[counter.value];
+    year.value = '1990';
     setData()
 });
 document.querySelector('#yearInc').addEventListener('click', async () => {
@@ -98,12 +174,43 @@ document.querySelector('#yearInc').addEventListener('click', async () => {
 });
 
 document.querySelector('#download').addEventListener('click', async () => {
-    triggerDownload(true);
-    const {
-        extSymbol,
-    } = getFields();
+    triggerDownload();
+
 
     chrome.downloads.onDeterminingFilename.addListener(function (item, suggest) {
-        suggest({ filename: `data/${extSymbol.value}/` + item.filename });
+        const {
+            year,
+        } = getFields();
+        suggest({ filename: `data/${year.value}/` + item.filename });
+    });
+
+});
+
+
+document.querySelector('#yearDownload').addEventListener('click', async () => {
+    const {
+        year,
+    } = getFields();
+    year.value = year.value - 1;
+    downloadYearRec();
+    chrome.downloads.onDeterminingFilename.addListener(function (item, suggest) {
+        const {
+            year,
+        } = getFields();
+        suggest({ filename: `data/${year.value}/` + item.filename });
+    });
+});
+
+document.querySelector('#symbolDownload').addEventListener('click', async () => {
+    const {
+        counter,
+    } = getFields();
+    counter.value = counter.value - 1;
+    downloadSymbolRec();
+    chrome.downloads.onDeterminingFilename.addListener(function (item, suggest) {
+        const {
+            year,
+        } = getFields();
+        suggest({ filename: `data/${year.value}/` + item.filename });
     });
 });

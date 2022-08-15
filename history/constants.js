@@ -49,3 +49,8 @@ const cmp = ['ONGC',
     'APOLLOHOSP',
     'DIVISLAB'
 ]
+const yearStart = '1990';
+const yearEnd = new Date().getFullYear();
+const pending = 'pending';
+const done = 'done';
+const noRecords = 'noRecords'
