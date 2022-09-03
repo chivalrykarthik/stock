@@ -1,32 +1,11 @@
-const { readdir, lstat, writeFile } = require('fs').promises;
 const csvToJson = require('csvtojson');
-
-const { Parser } = require('json2csv');
+const { readDirRec, calcPercentage, createCsv, buildCsv } = require('./../util');
+require('dotenv').config();
+const HISTORY_DATA = process.env.HISTORY_DATA;
 const cwd = process.cwd();
 const log = console.log;
-const readDirRec = async (path) => {
-    try {
-        let files = [];
-        const res = await readdir(path);
-        for (let i = 0; i < res.length; i++) {
-            const filePath = `${path}/${res[i]}`;
-            const stats = await lstat(filePath);
-            if (stats.isFile()) {
-                files.push(filePath);
-            } else {
-                files = [...files, ...await readDirRec(filePath)]
-            }
-        }
-        return files;
-    } catch (e) {
-        log(e)
-    }
-}
-const calcPercentage = (oldNum, newNum) => {
-    const num1 = oldNum.trim();
-    const num2 = newNum.trim();
-    return (((num2 - num1) / num1) * 100).toFixed(2);
-}
+
+
 const processFile = async (data) => {
     if (!data.length) return [];
     const processedData = data.map((dt, key) => {
@@ -52,25 +31,8 @@ const processFile = async (data) => {
     });
     return processedData;
 }
-createCsv = async (path, content) => {
-    try {
-        const wr = await writeFile(path, content);
-        log("Completed writing data into csv");
-    } catch (e) {
-        console.log("Error in writing:", e.message)
-    }
-}
-buildCsv = (data) => {
-    try {
-        const fields = Object.keys(data[0]);
-        const opts = { fields };
-        const parser = new Parser(opts);
-        const csv = parser.parse(data);
-        return csv;
-    } catch (err) {
-        console.error(err);
-    }
-}
+
+
 const readFileRec = async (files) => {
     for (let i = 0; i < files.length; i++) {
         log(`Reading data from ${files[i]}`);
@@ -86,7 +48,7 @@ const readFileRec = async (files) => {
 
 const processHistory = async () => {
     try {
-        const files = await readDirRec(cwd + '/history/data');
+        const files = await readDirRec(cwd + HISTORY_DATA);
         await readFileRec(files);
         //log(files);
     } catch (e) {

@@ -157,18 +157,28 @@ document.querySelector('#defaultValues').addEventListener('click', async () => {
 document.querySelector('#counterInc').addEventListener('click', async () => {
     const {
         counter,
-        extSymbol,
-        year
+        extSymbol
     } = getFields();
     counter.value = parseInt(counter.value) + 1;
     extSymbol.value = cmp[counter.value];
-    year.value = '1990';
+    // year.value = '1990';
     setData()
 });
 document.querySelector('#yearInc').addEventListener('click', async () => {
     const {
         year,
     } = getFields();
+    year.value = parseInt(year.value) + 1;
+    setData()
+});
+document.querySelector('#yearIncAll').addEventListener('click', async () => {
+    const {
+        counter,
+        extSymbol,
+        year,
+    } = getFields();
+    counter.value = 0;
+    extSymbol.value = cmp[0];
     year.value = parseInt(year.value) + 1;
     setData()
 });
