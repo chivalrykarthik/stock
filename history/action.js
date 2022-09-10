@@ -183,6 +183,24 @@ document.querySelector('#yearIncAll').addEventListener('click', async () => {
     setData()
 });
 
+
+document.querySelector('#yearIncAllFromCur').addEventListener('click', async () => {
+    const {
+        counter,
+        extSymbol
+    } = getFields();
+    counter.value = parseInt(counter.value);
+    extSymbol.value = cmp[counter.value];
+    downloadSymbolRec();
+    chrome.downloads.onDeterminingFilename.addListener(function (item, suggest) {
+        const {
+            year,
+        } = getFields();
+        suggest({ filename: `data/${year.value}/` + item.filename });
+    });
+    setData()
+});
+
 document.querySelector('#download').addEventListener('click', async () => {
     triggerDownload();
 

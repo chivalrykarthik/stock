@@ -1,26 +1,20 @@
-const { cols } = require('./constants');
+const { cols, colSymbol, colDate } = require('./constants');
 require('dotenv').config();
 
 const PERCENTAGE_VARIANCE = parseInt(process.env.PERCENTAGE_VARIANCE);
 const isMatchExist = (src, dt) => {
-    if (src['Symbol'] === "EICHERMOT") {
-        console.log("==============================")
-    }
     return cols.every((col) => {
         if (src[col] === '-' || dt[col] === '-') return true;
-        const upperLimit = +src[col] + PERCENTAGE_VARIANCE;
-        const lowerLimit = src[col] - PERCENTAGE_VARIANCE;
-        if (src['Symbol'] === "EICHERMOT" && (dt[col] >= lowerLimit && dt[col] <= upperLimit)) {
-            console.log("col=====" + col)
-            console.log("src[col]=====" + src[col])
-            console.log("dt[col]=====" + dt[col])
-            console.log("lowerLimit=====" + lowerLimit)
-            console.log("upperLimit=====" + upperLimit)
+
+        if (col === 'trdQtyPer' || col === 'turnoverPer' || col === 'noOfTradePer') {
+            return (dt[col] >= 0 && src[col] >= 0) || (dt[col] <= 0 && src[col] <= 0)
         }
 
-        return (dt[col] >= lowerLimit && dt[col] <= upperLimit)
-    })
+        const upperLimit = +src[col] + PERCENTAGE_VARIANCE;
+        const lowerLimit = src[col] - PERCENTAGE_VARIANCE;
 
+        return (dt[col] >= lowerLimit && dt[col] <= upperLimit);
+    });
 }
 const findMatch = (source, data) => {
     if (!source.length || !data.length) return [];
@@ -38,8 +32,10 @@ const findMatch = (source, data) => {
                     const projClosePer = (revSrc[i]['Close Price'] / 100) * dt[j + 1]['prevClosePer'];
                     let tmp = {
                         index: j,
-                        data: dt[j],
-                        nextRow: dt[j + 1],
+                        //data: dt[j],
+                        //nextRow: dt[j + 1],
+                        srcDate: revSrc[i][colDate],
+                        mtSymbol: dt[j][colSymbol],
                         projOpen: (+revSrc[i]['Open Price'] + projOpenPer),
                         projClose: (+revSrc[i]['Close Price'] + projClosePer),
                     }
