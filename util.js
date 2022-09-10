@@ -1,4 +1,4 @@
-const { readdir, lstat, writeFile } = require('fs').promises;
+const { readdir, lstat, writeFile, readFile } = require('fs').promises;
 const { Parser } = require('json2csv');
 const log = console.log;
 
@@ -35,6 +35,16 @@ const createCsv = async (path, content) => {
         console.log("Error in writing:", e.message)
     }
 }
+
+const readContent = async (path)=>{
+	try {
+        const data = await readFile(path);
+		return JSON.parse(data);
+        log("Completed reading data into csv");
+    } catch (e) {
+        console.log("Error in reading:", e.message)
+    }
+}
 const buildCsv = (data) => {
     try {
         const fields = Object.keys(data[0]);
@@ -51,5 +61,6 @@ module.exports = {
     readDirRec,
     calcPercentage,
     createCsv,
-    buildCsv
+    buildCsv,
+	readContent
 };
