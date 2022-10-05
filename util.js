@@ -1,13 +1,15 @@
-const { readdir, lstat, writeFile, readFile } = require('fs').promises;
+const { readdir, lstat, writeFile, readFile,mkdir } = require('fs').promises;
+const {existsSync} = require('fs');
 const { Parser } = require('json2csv');
+const path = require('path');
 const log = console.log;
 
-const readDirRec = async (path) => {
+const readDirRec = async (pathName) => {
     try {
         let files = [];
-        const res = await readdir(path);
+        const res = await readdir(pathName);
         for (let i = 0; i < res.length; i++) {
-            const filePath = `${path}/${res[i]}`;
+            const filePath = `${pathName}/${res[i]}`;
             const stats = await lstat(filePath);
             if (stats.isFile()) {
                 files.push(filePath);
@@ -27,18 +29,20 @@ const calcPercentage = (oldNum, newNum) => {
     return (((num2 - num1) / num1) * 100).toFixed(2);
 }
 
-const createCsv = async (path, content) => {
+const createCsv = async (pathName, content, showLog = true) => {
     try {
-        const wr = await writeFile(path, content);
-        log("Completed writing data into csv");
+        const wr = await writeFile(pathName, content);
+		if(showLog){
+			log("Completed writing data into csv");
+		}
     } catch (e) {
-        console.log("Error in writing:", e.message)
+       console.log("Error in writing:", e.message)
     }
 }
 
-const readContent = async (path)=>{
+const readContent = async (pathName)=>{
 	try {
-        const data = await readFile(path);
+        const data = await readFile(pathName);
 		return JSON.parse(data);
         log("Completed reading data into csv");
     } catch (e) {
@@ -57,10 +61,37 @@ const buildCsv = (data) => {
     }
 }
 
+const ensureDirectoryExistence = async (filePath) => {
+  var dirname = path.dirname(filePath);  
+  if (existsSync(dirname)) {
+    return true;
+  }
+  
+  await mkdir(dirname, { recursive: true }).catch(console.error);  
+}
+
+const readDirList = async (pathName) => {
+    try {
+        let files = [];
+        const res = await readdir(pathName);
+        for (let i = 0; i < res.length; i++) {
+            const filePath = `${pathName}/${res[i]}`;
+            const stats = await lstat(filePath);
+            if (!stats.isFile()) {
+                files.push(filePath);
+            }
+        }
+        return files;
+    } catch (e) {
+        log(e)
+    }
+}
 module.exports = {
     readDirRec,
     calcPercentage,
     createCsv,
     buildCsv,
-	readContent
+	readContent,
+	ensureDirectoryExistence,
+	readDirList
 };

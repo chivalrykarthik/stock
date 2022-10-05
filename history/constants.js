@@ -200,7 +200,7 @@ const cmp = [
     'TATAELXSI',
     'ZOMATO'
 ]
-const yearStart = '1990';
+const yearStart = '1996';
 const yearEnd = new Date().getFullYear();
 const pending = 'pending';
 const done = 'done';

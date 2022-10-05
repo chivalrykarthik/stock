@@ -6,9 +6,9 @@ const isMatchExist = (src, dt) => {
     return cols.every((col) => {
         if (src[col] === '-' || dt[col] === '-') return true;
 
-        if (col === 'trdQtyPer' || col === 'turnoverPer' || col === 'noOfTradePer') {
+       /* if (col === 'trdQtyPer' || col === 'turnoverPer' || col === 'noOfTradePer') {
             return (dt[col] >= 0 && src[col] >= 0) || (dt[col] <= 0 && src[col] <= 0)
-        }
+        }*/
 
         const upperLimit = +src[col] + PERCENTAGE_VARIANCE;
         const lowerLimit = src[col] - PERCENTAGE_VARIANCE;
@@ -16,7 +16,7 @@ const isMatchExist = (src, dt) => {
         return (dt[col] >= lowerLimit && dt[col] <= upperLimit);
     });
 }
-const findMatch = (source, data) => {
+const findMatch = (source, data) => {	
     if (!source.length || !data.length) return [];
     const src = JSON.parse(JSON.stringify(source));
     const dt = JSON.parse(JSON.stringify(data));

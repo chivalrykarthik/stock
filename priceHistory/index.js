@@ -1,7 +1,7 @@
 const csvToJson = require('csvtojson');
 const { readDirRec, calcPercentage, createCsv, buildCsv } = require('./../util');
 require('dotenv').config();
-const HISTORY_DATA = process.env.HISTORY_DATA;
+const FINAL_PATH = process.env.FINAL_PATH;
 const cwd = process.cwd();
 const log = console.log;
 
@@ -48,7 +48,7 @@ const readFileRec = async (files) => {
 
 const processHistory = async () => {
     try {
-        const files = await readDirRec(cwd + HISTORY_DATA);
+        const files = await readDirRec(cwd + FINAL_PATH);
         await readFileRec(files);
         //log(files);
     } catch (e) {

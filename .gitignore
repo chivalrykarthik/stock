@@ -4,9 +4,13 @@ node_modules
 analysis.csv
 analysis.json
 final.json
+notsure.txt
 .env
 pages
 900
 /history/data
+/history/final
+/history/tmp
+/bkp
 .vscode
 res.json

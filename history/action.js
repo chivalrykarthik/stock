@@ -22,10 +22,12 @@ const setValues = (val) => {
     const symbol = document.querySelector('#symbol');
     const fromDate = document.querySelector('#fromDate');
     const toDate = document.querySelector('#toDate');
+	const series = document.querySelector('#series');
     document.querySelector('#rdDateToDate').click();
     symbol.value = extSymbol;
     fromDate.value = startDate;
     toDate.value = endDate;
+	series.value = 'EQ';
     document.querySelector('#get').click();
 }
 const startDownload = () => {
@@ -68,11 +70,15 @@ const setData = async () => {
 
 const checkDownloadLink = () => {
     const records = document.querySelectorAll('.alt');
+	const numbers = document.querySelectorAll('.number');
     if (records.length === 0) {
         return 'pending';
     } else if (records.length > 1) {
         return 'done';
     } else if (records.length === 1) {
+		if(numbers.length){
+			return 'done';
+		}
         return 'noRecords';
     }
 

@@ -6,16 +6,23 @@
   "scripts": {
     "start": "node ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-ph":"node ./priceHistory",
-    "start-fp":"node ./findPrice"
+	"start-combine": "node ./combine/combine.js",
+	"start-merge": "node ./combine/merge.js",
+    "start-ph": "node ./priceHistory",
+    "start-fp": "node ./findPrice",
+	"start-server": "node ./findPrice/server",
+	"start-csvserver": "node ./findPrice/server/csvToJson.js"	
   },
   "keywords": [],
   "author": "karthik",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
     "cheerio": "^1.0.0-rc.5",
     "csvtojson": "^2.0.10",
     "dotenv": "^10.0.0",
+    "express": "^4.18.1",
     "json2csv": "^5.0.5",
     "puppeteer-core": "^10.1.0"
   }

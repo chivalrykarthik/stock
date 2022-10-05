@@ -18,3 +18,33 @@ MarkCap,mc50,mc200,mc1,3mthreturn,6mthreturn,1Yrreturn,PERatio#,EarningsYield,EV
 
 without MC:
 PERatio#,EarningsYield,EVEBITA#,Int Coverage,Debt to Eq#,CurrentRatio,FreeCashFlowRsCr,FCFPrevAnnRsCr,FreeCashFlow3YrsRsCr,QoQProfits,QoQSales,QtrProfitVar,ROE,ROEPrevAnn,ROCE,ROCEPrevYr,Salesgrowth,QtrSalesVar,SalesVar3Yrs,SalesVar5Yrs,EPS12M,EPSAnnRs,EPSPrevAnnRs,EPSQtrRs,EPSPrevQtrRs,EPSPYQtrRs,DivYld,DivPayout#,OPM,OPMAnn,OPMPrevAnn,OPMQtr,OPMPrevQtr,OPMPYQtr,InventTurnOver
+
+
+without MC & cashflow:
+MarkCap,PERatio#,EarningsYield,EVEBITA#,Debt to Eq#,QoQProfits,QoQSales,QtrProfitVar,ROE,ROEPrevAnn,ROCE,ROCEPrevYr,Salesgrowth,QtrSalesVar,SalesVar3Yrs,SalesVar5Yrs,EPS12M,EPSAnnRs,EPSPrevAnnRs,EPSQtrRs,EPSPrevQtrRs,EPSPYQtrRs,DivYld,DivPayout#,OPM,OPMAnn,OPMPrevAnn,OPMQtr,OPMPrevQtr,OPMPYQtr,InventTurnOver
+
+Trimmed:
+MarkCap,PERatio#,EarningsYield,EVEBITA#,Debt to Eq#,QoQProfits,QoQSales,QtrProfitVar,ROE,ROCE,Salesgrowth,QtrSalesVar,DivYld,DivPayout#,OPM,OPMAnn,OPMPrevAnn,OPMQtr,OPMPrevQtr,OPMPYQtr,InventTurnOver
+
+
+Ratios
+GN#,CMPFCF#,PSRatio#,PERatio#,EVEBITA#,Debt to Eq#,EarningsYield,ROCE,ROE,ROA 12M,InventTurnOver,OPM,CurrentRatio,Int Coverage,DivYld,DivPayout#
+CMPFCF#,PSRatio#,PERatio#,EVEBITA#,Debt to Eq#,EarningsYield,ROCE,ROE,ROA 12M,InventTurnOver,OPM,CurrentRatio,Int Coverage,DivYld,DivPayout#
+CMPFCF#,PSRatio#,PERatio#,EVEBITA#,Debt to Eq#,EarningsYield,ROCE,ROE,ROA 12M,InventTurnOver,OPM,CurrentRatio,Int Coverage
+
+
+EarningsYield,ROCE
+ROE,ROA,
+InventTurnOver,OPM
+CurrentRatio,Int Coverage
+DivYld,DivPayout#
+CMPFCF#,PSRatio#,PERatio#,EVEBITA#,Debt to Eq#
+
+
+
+Salesgrowth - price to sales 
+profit - ROA, ROE 
+earning - Eary ROCE 
+debt less debto equity
+cash flow price to free cash flow
+price cheap - pe 
