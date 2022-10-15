@@ -3,6 +3,7 @@ module.exports = {
     //cols: ['openClosePer', 'prevClosePer', 'prevOpenPer', 'trdQtyPer'],
 	cols: ['openClosePer', 'prevClosePer', 'prevOpenPer'],
     colSymbol: 'Symbol',
+	colPrice:'Prev Close',
     colDate: 'Date',
     n50q: ["TATASTEEL", "WIPRO"],
     n50: [

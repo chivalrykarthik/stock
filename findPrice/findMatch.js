@@ -1,7 +1,7 @@
 const { cols, colSymbol, colDate } = require('./constants');
 require('dotenv').config();
 
-const PERCENTAGE_VARIANCE = parseInt(process.env.PERCENTAGE_VARIANCE);
+const PERCENTAGE_VARIANCE = parseFloat(process.env.PERCENTAGE_VARIANCE);
 const isMatchExist = (src, dt) => {
     return cols.every((col) => {
         if (src[col] === '-' || dt[col] === '-') return true;
@@ -18,8 +18,10 @@ const isMatchExist = (src, dt) => {
 }
 const findMatch = (source, data) => {	
     if (!source.length || !data.length) return [];
-    const src = JSON.parse(JSON.stringify(source));
-    const dt = JSON.parse(JSON.stringify(data));
+    // const src = JSON.parse(JSON.stringify(source));
+    // const dt = JSON.parse(JSON.stringify(data));
+	const src = [...source];
+    const dt = [...data];
     const revSrc = src.reverse();
     let match = [];
     for (let i = 0; i <= revSrc.length - 1; i++) {
