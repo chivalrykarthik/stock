@@ -1,4 +1,5 @@
 const { cols, colSymbol, colDate } = require('./constants');
+const {findPercentage} = require('./../util.js')
 require('dotenv').config();
 
 const PERCENTAGE_VARIANCE = parseFloat(process.env.PERCENTAGE_VARIANCE);
@@ -9,17 +10,18 @@ const isMatchExist = (src, dt) => {
        /* if (col === 'trdQtyPer' || col === 'turnoverPer' || col === 'noOfTradePer') {
             return (dt[col] >= 0 && src[col] >= 0) || (dt[col] <= 0 && src[col] <= 0)
         }*/
-
-        const upperLimit = +src[col] + PERCENTAGE_VARIANCE;
-        const lowerLimit = src[col] - PERCENTAGE_VARIANCE;
-
+		const diff = +parseFloat(findPercentage(src[col],PERCENTAGE_VARIANCE)).toFixed(2);		
+		
+        const upperLimit = +parseFloat(+src[col] + Math.abs(diff)).toFixed(2);
+        const lowerLimit = +parseFloat(src[col] - Math.abs(diff)).toFixed(2);
+		
         return (dt[col] >= lowerLimit && dt[col] <= upperLimit);
     });
 }
 const findMatch = (source, data) => {	
     if (!source.length || !data.length) return [];
-    // const src = JSON.parse(JSON.stringify(source));
-    // const dt = JSON.parse(JSON.stringify(data));
+    //const src = JSON.parse(JSON.stringify(source));
+    //const dt = JSON.parse(JSON.stringify(data));
 	const src = [...source];
     const dt = [...data];
     const revSrc = src.reverse();
@@ -37,6 +39,7 @@ const findMatch = (source, data) => {
                         //data: dt[j],
                         //nextRow: dt[j + 1],
                         srcDate: revSrc[i][colDate],
+						mtDate: dt[j][colDate],
                         mtSymbol: dt[j][colSymbol],
                         projOpen: (+revSrc[i]['Open Price'] + projOpenPer),
                         projClose: (+revSrc[i]['Close Price'] + projClosePer),

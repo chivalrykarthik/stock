@@ -7,6 +7,7 @@ require('dotenv').config();
 const FINAL_PATH = process.env.FINAL_PATH;
 const NUMBER_OF_DAYS = process.env.NUMBER_OF_DAYS.split(',');
 const n = parseInt(process.env.CHUNK_SIZE);
+const fpn = parseInt(process.env.FP_CHUNK_SIZE);
 const { log } = console;
 //const log = () => { };
 const cwd = process.cwd();
@@ -20,7 +21,9 @@ const processFile = async (sourceData, allFiles, parentIndex, dys) => {
     let match = [];
     for (let i = 0; i < allFiles.length; i++) {
         //log(`Reading data for ${parentIndex}(${i})(${dys})(${matchFound})(${srcDt[0][colSymbol]}) from ${allFiles[i]}`);
-		log(`Reading data for ${parentIndex}(${i})(${dys})(${matchFound})`);
+		
+		//log(`Reading data for ${parentIndex}(${i})(${dys})(${matchFound})`);
+		
 		//log("matches==="+JSON.stringify(matches));
         //const json = await csvToJson({ flatKeys: true }).fromFile(allFiles[i]);
 		 // const fileRes = await axios.post('http://localhost:5000/csvtojson',{fileName:allFiles[i]});
@@ -45,13 +48,54 @@ const processFile = async (sourceData, allFiles, parentIndex, dys) => {
                 //file: allFiles[i],
                 match: [...mtch],
 				srcSymb:srcDt[0][colSymbol]
-            }];
+            }];						
 			matches = matches.includes(srcDt[0][colSymbol]) ? matches : [...matches, srcDt[0][colSymbol]];
 		} /*else{
 			const m = matches.indexOf(srcDt[0][colSymbol]);
 			matches = m >= 0 ? [...matches.slice(0,m),...matches.slice(m+1)] : matches;
 		}*/
     }
+    return match;
+};
+
+const calcFp = async(srcDt,json)=>{
+	const res = await axios.post('http://localhost:3000/fp',{srcDt, json});
+	return res.data;
+}
+const processFileChunks = async (sourceData, allFiles, parentIndex, dys) => {
+    const srcDt = sourceData.slice(sourceData.length - dys);
+    let match = [];
+	const total = allFiles.length-1;
+    for(let i = 0; i<=total;i+=fpn) {
+		let end = i + (fpn - 1);
+		let lastIndex = end > total ? total:end;
+		let promiseArr = [];
+		for(let j = i; j<=lastIndex;j++) {
+			log(`Reading data for ${parentIndex}(${j})(${dys})(${matchFound})`);
+			if(!srcFiles[allFiles[j]]){			
+				const fileRes = await axios.post('http://localhost:5000/csvtojson',{fileName:allFiles[j]});
+				srcFiles[allFiles[j]] =  fileRes.data;		
+			} 
+			const json = srcFiles[allFiles[j]];
+			
+			promiseArr.push(calcFp(srcDt,json));
+			// axios.post('http://localhost:3000/fp',{srcDt, json});		
+		}
+		const resp = await Promise.all(promiseArr)
+		if(resp.length) {			
+			resp.forEach((mtch)=> {				
+				if(mtch.length) {
+					matchFound+=mtch.length;
+					match = [...match, {
+						//file: allFiles[i],
+						match: [...mtch],
+						srcSymb:srcDt[0][colSymbol]
+					}];
+					matches = matches.includes(srcDt[0][colSymbol]) ? matches : [...matches, srcDt[0][colSymbol]];
+				}
+			});
+		}
+	}
     return match;
 };
 /*
@@ -97,9 +141,11 @@ const readFileRecParallel = async (files, allFiles, dys, list) => {
 		 const json = srcFiles[files[i]];		
 		let res = [];
 		if(list.length){
-			if (list.includes(json[0][colSymbol])) {		
+			if (list.includes(json[json.length - 1][colSymbol])) {
 				//promiseArr.push(processFile(json, allFiles, i, dys));        
-				res = await processFile(json, allFiles, i, dys);
+				// res = await processFile(json, allFiles, i, dys);
+				res = await processFileChunks(json, allFiles, i, dys);
+				
 			}
 		} else {
 			const price = json[json.length - 1][colPrice];
@@ -107,7 +153,8 @@ const readFileRecParallel = async (files, allFiles, dys, list) => {
 			const endPrice= 100;
 			//if (price >=startPrice && price <= endPrice) {				
 				//promiseArr.push(processFile(json, allFiles, i, dys));     
-				res = await processFile(json, allFiles, i, dys);				
+				//res = await processFile(json, allFiles, i, dys);				
+				res = await processFileChunks(json, allFiles, i, dys);				
 			//}
 		}
 		if(res.length){
@@ -151,12 +198,15 @@ const readFileChunks = async (files, allFiles, dys, list) => {
 				srcFiles[files[j]] =  fileRes.data;					
 			} 
 			 const json = srcFiles[files[j]];	
-			if(list.length) {
-				if (list.includes(json[0][colSymbol])) {
+			if(list.length) {				
+				if (list.includes(json[json.length - 1][colSymbol])) {
 					promiseArr.push(processFile(json, allFiles, j, dys));        
-				}
+					//promiseArr.push(processFileChunks(json, allFiles, j, dys));        
+					
+				} 
 			} else {
 				promiseArr.push(processFile(json, allFiles, j, dys));				
+				//promiseArr.push(processFileChunks(json, allFiles, j, dys));				
 			}
 		}
 		const resp = await Promise.all(promiseArr)
@@ -167,6 +217,7 @@ const readFileChunks = async (files, allFiles, dys, list) => {
 				}
 			});
 		}
+		log(`Reading data for ${i}(${dys})(${matchFound})`);		
 	}
 	
 	return result;
@@ -220,7 +271,7 @@ const findPrice = async (dys,list) => {
 }
 
 
-const prepare = async ()=>{
+const prepare = async ()=> {
 	// findPrice();
 	const t= NUMBER_OF_DAYS.length;	
 	await createCsv('res.json',JSON.stringify([]));
@@ -228,6 +279,7 @@ const prepare = async ()=>{
 	for(let i = 0;i<t;i++){	
 		matchFound = 0;
 		const tmpMatch = JSON.parse(JSON.stringify(matches));
+		
 		matches = [];
 		let len = await findPrice(NUMBER_OF_DAYS[i],tmpMatch);
 		log(`Number of iteration:${NUMBER_OF_DAYS[i]}`);		

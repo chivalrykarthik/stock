@@ -86,6 +86,9 @@ const readDirList = async (pathName) => {
         log(e)
     }
 }
+
+const findPercentage = (num,percent)=>(num/100)*percent
+
 module.exports = {
     readDirRec,
     calcPercentage,
@@ -93,5 +96,6 @@ module.exports = {
     buildCsv,
 	readContent,
 	ensureDirectoryExistence,
-	readDirList
+	readDirList,
+	findPercentage
 };
