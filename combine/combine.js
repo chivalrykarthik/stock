@@ -8,7 +8,7 @@ const cwd = process.cwd();
 
 class Combine {
 	constructor(){
-		this.processingYear = 1996;
+		this.processingYear = 2022;
 		this.yearLast = new Date().getFullYear();
 		this.misMatch = [];
 	}

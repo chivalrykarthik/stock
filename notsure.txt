@@ -48,3 +48,10 @@ earning - Eary ROCE
 debt less debto equity
 cash flow price to free cash flow
 price cheap - pe 
+
+Low price all time > .4* High price all time
+
+node ./cleanUp.js
+node ./scrapper.js https://www.screener.in/company/compare/00000027/00000065/
+node ./scrapper.js false - read from env
+node ./processPages.js

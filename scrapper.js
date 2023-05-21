@@ -13,8 +13,10 @@ const output = process.env.OUTPUT;
 const { cols, removeSelectors } = require('./selectors');
 
 if (process.argv.slice(2)) {
-    const urlStr = process.argv.slice(2).toString().replace(/\*/gi, '&');
-    nav = urlStr;
+    const urlStr = process.argv.slice(2).toString().replace(/\*/gi, '&');	
+	if(urlStr !== 'false'){
+		nav = urlStr;
+	}
 }
 
 const selectors = async (page, selector, isCheked, indx = 0) => {
@@ -121,7 +123,7 @@ const formContent = html => `<table>${html}</table>`;
         await page.click("button.button-primary");
         await page.waitForSelector("#sidebar");
 
-        // GOTO page
+        // GOTO page		
         await page.goto(nav);
         await page.waitForSelector("table");
 

@@ -11,7 +11,9 @@ const processFile = async (data) => {
     const processedData = data.map((dt, key) => {
         dt.openClosePer = calcPercentage(dt['Open Price'], dt['Close Price']);
         dt.prevClosePer = calcPercentage(dt['Prev Close'], dt['Close Price']);
+		//dt.prevCloseOpenPer = calcPercentage(dt['Prev Close'], dt['Open Price']);
         if (key > 0) {
+			//dt.prevCloseOpenPer = calcPercentage(data[key - 1]['Close Price'], dt['Open Price']);
             dt.prevClosePer = calcPercentage(data[key - 1]['Close Price'], dt['Close Price']);
             dt.prevOpenPer = calcPercentage(data[key - 1]['Open Price'], dt['Open Price']);
             dt.trdQtyPer = calcPercentage(data[key - 1]['Total Traded Quantity'], dt['Total Traded Quantity']);
@@ -65,4 +67,9 @@ series
 rdDateToDate
 fromDate
 toDate
+
+Open - close 2376.95-2477.50 = 4.23%
+prev open - open - 2336.75 - 2376.95= 1.72%
+prev close - close - 2363.45 - 2477.50 = 4.82%
+Prev close - open - 2363.45 - 2375.85 = 0.52%
 */

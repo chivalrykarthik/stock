@@ -2,7 +2,7 @@
 const { readDirRec, createCsv, readContent } = require('./../util');
 const axios = require('axios');
 const findMatch = require('./findMatch');
-const { colSymbol, n50, colPrice } = require('./constants');
+const { colSymbol, n50,next50, colPrice } = require('./constants');
 require('dotenv').config();
 const FINAL_PATH = process.env.FINAL_PATH;
 const NUMBER_OF_DAYS = process.env.NUMBER_OF_DAYS.split(',');
@@ -16,6 +16,7 @@ const cwd = process.cwd();
 let matchFound = 0;
 let matches = [];
 let srcFiles = {};
+let cnt = 0;
 const processFile = async (sourceData, allFiles, parentIndex, dys) => {
     const srcDt = sourceData.slice(sourceData.length - dys);
     let match = [];
@@ -205,7 +206,12 @@ const readFileChunks = async (files, allFiles, dys, list) => {
 					
 				} 
 			} else {
-				promiseArr.push(processFile(json, allFiles, j, dys));				
+				const symb = json[json.length - 1][colSymbol];
+				cnt++;
+				if(n50.includes(symb) || next50.includes(symb)){
+				//if(cnt <= 100){
+					promiseArr.push(processFile(json, allFiles, j, dys));				
+				}
 				//promiseArr.push(processFileChunks(json, allFiles, j, dys));				
 			}
 		}

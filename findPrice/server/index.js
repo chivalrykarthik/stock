@@ -24,7 +24,7 @@ if (cluster.isMaster) {
 		const {srcDt, json} = (req.body);
 		const mtch = findMatch(srcDt, json);	
 		res.json(mtch);
-		console.log("Response sent:"+ cluster.worker.id);
+		// console.log("Response sent:"+ cluster.worker.id);
 	});
 
 	app.listen(3000, () => {

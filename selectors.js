@@ -7,8 +7,8 @@ const removeSelectors = [
     'Sales latest quarter',
     'Return on capital employed'
 ];
-const cols = ['Earnings yield', 'Return on capital employed'];
-const colsa = [
+const colsq = ['Earnings yield', 'Return on capital employed','OPM','DebtProfit','Profit growth','Sales growth'];
+const cols = [
     'Market Capitalization 3years back',
     'Market Capitalization 5years back',
     'mc50', 'mc200', 'mc200Diff', 'mc1',
